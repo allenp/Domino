@@ -1,0 +1,101 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr"> 
+
+<head> 
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+
+<link type="text/css" rel="stylesheet" media="all" href="domino.static.css" />
+<link type="text/css" rel="stylesheet" media="all" href="stage.css" />
+
+<script type="text/javascript" src="js/DominoGame.js"></script> 
+<script type="text/javascript" src="js/DominoClient.js"></script> 
+<script type="text/javascript" src="js/jquery-1.4.2.js"></script> 
+<script type="text/javascript" src="js/ui/ui.core.min.js"></script> 
+<script type="text/javascript" src="js/ui/ui.draggable.min.js"></script>
+<script type="text/javascript">
+	$( function() {
+	
+		//test bed
+		
+		//create a new game server and shuffle and deal
+		var gameServer = new DominoGame();
+		gameServer.shuffle();
+		gameServer.deal();
+		
+		
+		//this loop now simulates sending out player objects to each participating player
+		//each players player object will contain all the information they need to participate
+		//in the game
+		for( var p = 0; p < gameServer.players.length; p++ ) {
+
+			//create the player client object, and initialize it with the player cards
+			//this should change to just accept the entire player object
+			//this will likely come as json from the server
+			//setup DominoClient to make ajax requests for its player information
+			var client = new DominoClient(gameServer.players[p].cards);
+			
+			var cards = client.cards;
+			
+			for(var i = 0; i < cards.length; i++) {
+			
+				var card = client.createCard( cards[i].left(), cards[i].right());
+
+				$("#player" + p + " .section").append( card );
+				
+			}
+		}
+		
+		
+		//rotates dominoes in steps of 90 my switching the classes in steps array
+		$(".domino").dblclick( function(event) {
+		
+			//attempting to stop the default highlighting action you get when double clicking on browser elements
+			event.preventDefault();
+			
+			$this = $(this);
+			
+			var steps = [ 'r90', 'r180', 'r270', '' ];
+			
+			var found = false;
+			var changed = false;
+			var foundClass = '';
+			for(var i = 0; i < steps.length; i++ )
+			{
+				if(found === true) {
+					$this.addClass(steps[i]);
+					$this.removeClass(foundClass);
+					changed = true;
+					break;
+				}
+				
+				if($this.hasClass(steps[i])) {
+					foundClass = steps[i];
+					found = true;
+				}
+			}
+			
+			if(found === false)
+				$this.addClass(steps[0]);
+		});
+		
+		
+	} );
+	
+</script>
+</head>
+
+<body>
+	<div id="stage">
+		<div id="players">
+			<div id="player0" class="player-box"><div class="section"><h2>Player 1</h2></div></div>
+			<div id="player1" class="player-box"><div class="section"><h2>Player 2</h2></div></div>
+			<div id="player2" class="player-box"><div class="section"><h2>Player 3</h2></div></div>
+			<div id="player3" class="player-box"><div class="section"><h2>Player 4</h2></div></div>
+		</div>
+		<div id="desk"><div class="section"></div></div>
+	</div>
+</body>
+</html>
