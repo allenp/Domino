@@ -1,0 +1,22 @@
+startup_message off
+vbell off
+autodetach on
+altscreen on
+shelltitle "$ |bash"
+defscrollback 10000
+defutf8 on
+nonblock on
+
+#escape ``
+#escape `e
+
+# BIND ESCAPE TO F11!
+# bindkey -k F1 command
+
+bind s
+termcapinfo xterm ti@:te@
+pow_detach_msg "Screen session of \$LOGNAME \$:cr:\$:nl:ended."
+caption always '%{= dg} %H %{G}| %{B}%l %{G}|%=%?%{d}%-w%?%{r}(%{d}%n %t%? {%u} %?%{r})%{d}%?%+w%?%=%{G}| %{B}%M %d %c:%s '
+
+screen -S Server vim DominoGame.js
+screen -S Client vim DominoClient.js
