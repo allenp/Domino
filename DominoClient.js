@@ -23,6 +23,7 @@ DominoClient.cardNames = {
 }
 	
 DominoClient.prototype.createCard = function(one, two) {
+    console.log('inside create card: ' + one + ' ' + two);
 	var node = document.createElement("div");
 	var cardString = 'domino ' + DominoClient.cardNames[one] + ' ' + DominoClient.cardNames[two];
 	node.appendChild( document.createTextNode( cardString ) );

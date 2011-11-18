@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr"> 
+
+<head> 
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+
+<link type="text/css" rel="stylesheet" media="all" href="domino.static.css" />
+<link type="text/css" rel="stylesheet" media="all" href="stage.css" />
+
+<script type="text/javascript" src="DominoGame.js"></script> 
+<script type="text/javascript" src="DominoClient.js"></script> 
+<script type="text/javascript" src="jquery-1.4.2.js"></script> 
+<script type="text/javascript">
+	$( function() {
+	
+		//test bed
+		
+		//create a new game server and shuffle and deal
+		var gameServer = new DominoGame();
+		gameServer.shuffle();
+		gameServer.deal();
+		
+		
+		//this loop now simulates sending out player objects to each participating player
+		//each players player object will contain all the information they need to participate
+		//in the game
+/*		for( var p = 0; p < gameServer.players.length; p++ ) {
+
+			//create the player client object, and initialize it with the player cards
+			//this should change to just accept the entire player object
+			//this will likely come as json from the server
+			//setup DominoClient to make ajax requests for its player information
+			var client = new DominoClient(gameServer.players[p].cards);
+			
+			var cards = client.cards;
+			
+			for(var i = 0; i < cards.length; i++) {
+			
+				var card = client.createCard( cards[i].left(), cards[i].right());
+
+				$("#players").append( card );
+				
+			}
+		}
+        */
+
+        var client = new DominoClient();
+        var a = gameServer.whichPlayer();
+        console.log('player: ' + a);
+        gameServer.makePlay(a, new DominoGame.Domino(6,6));
+
+        var cc = 0;
+
+        while(cc < 20)
+        {
+            a = gameServer.whichPlayer();
+            ends = gameServer.headsAndTails();
+            console.log('current game: ' + ends.head + ' ' + ends.tail);
+            console.log('player: ' + a);
+            plays = gameServer.players[a].whatToPlay(ends.head, ends.tail);
+            first = plays[0];
+            var head = 0;
+            if(first.right() == ends.head) head = 1;
+            if(first.left() == ends.head) head = 1;
+            console.log('player plays: ' + first.left() + ' ' + first.right() + 'rand: ' + first.id);
+			left = first.left();
+			right = first.right();
+            dom = new DominoGame.Domino(left, right);
+			console.log('dom before play is made shows: ' + dom.left() + ' ' + dom.right() + ' rand: ' + dom.id) 
+            gameServer.makePlay(a, dom,head);
+			
+            console.log('dom after play shows: ' + dom.left() + ' ' + dom.right() + ' rand: ' + dom.id);
+            cc += 1;
+        }
+
+        for(var ca = 0; ca < gameServer.playstack.length; ca++)
+        {
+            card = gameServer.playstack[ca];
+            domcard = client.createCard(card.left(), card.right());
+            $("#players").append( domcard );
+        }
+
+	} );
+	
+</script>
+</head>
+
+<body>
+	<div id="stage">
+		<div id="players">
+		</div>
+	</div>
+</body>
+</html>
