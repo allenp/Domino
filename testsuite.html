@@ -12,84 +12,77 @@
 <script type="text/javascript" src="DominoClient.js"></script> 
 <script type="text/javascript" src="jquery-1.4.2.js"></script> 
 <script type="text/javascript">
-	$( function() {
-	
-		//test bed
-		
-		//create a new game server and shuffle and deal
-		var gameServer = new DominoGame();
-		gameServer.shuffle();
-		gameServer.deal();
-		
-		
-		//this loop now simulates sending out player objects to each participating player
-		//each players player object will contain all the information they need to participate
-		//in the game
-/*		for( var p = 0; p < gameServer.players.length; p++ ) {
+    $( function() {
+    
+        //test bed
+        
+        //create a new game server and shuffle and deal
+        var gameServer = new Game();
+        gameServer.shuffle();
+        gameServer.deal();
+        
+        
+        //this loop now simulates sending out player objects to each participating player
+        //each players player object will contain all the information they need to participate
+        //in the game
+/*      for( var p = 0; p < gameServer.players.length; p++ ) {
 
-			//create the player client object, and initialize it with the player cards
-			//this should change to just accept the entire player object
-			//this will likely come as json from the server
-			//setup DominoClient to make ajax requests for its player information
-			var client = new DominoClient(gameServer.players[p].cards);
-			
-			var cards = client.cards;
-			
-			for(var i = 0; i < cards.length; i++) {
-			
-				var card = client.createCard( cards[i].left(), cards[i].right());
+            //create the player client object, and initialize it with the player cards
+            //this should change to just accept the entire player object
+            //this will likely come as json from the server
+            //setup DominoClient to make ajax requests for its player information
+            var client = new DominoClient(gameServer.players[p].cards);
+            
+            var cards = client.cards;
+            
+            for(var i = 0; i < cards.length; i++) {
+            
+                var card = client.createCard( cards[i].left(), cards[i].right());
 
-				$("#players").append( card );
-				
-			}
-		}
+                $("#players").append( card );
+                
+            }
+        }
         */
 
         var client = new DominoClient();
         var a = gameServer.whichPlayer();
-        console.log('player: ' + a);
-        gameServer.makePlay(a, new DominoGame.Domino(6,6));
+        gameServer.makePlay(a, new Game.Domino(6,6));
 
         var cc = 0;
 
-        while(cc < 20)
+        while(cc < 16)
         {
             a = gameServer.whichPlayer();
             ends = gameServer.headsAndTails();
-            console.log('current game: ' + ends.head + ' ' + ends.tail);
-            console.log('player: ' + a);
             plays = gameServer.players[a].whatToPlay(ends.head, ends.tail);
             first = plays[0];
             var head = 0;
             if(first.right() == ends.head) head = 1;
             if(first.left() == ends.head) head = 1;
-            console.log('player plays: ' + first.left() + ' ' + first.right() + 'rand: ' + first.id);
-			left = first.left();
-			right = first.right();
-            dom = new DominoGame.Domino(left, right);
-			console.log('dom before play is made shows: ' + dom.left() + ' ' + dom.right() + ' rand: ' + dom.id) 
+            left = first.left();
+            right = first.right();
+            dom = new Game.Domino(left, right);
             gameServer.makePlay(a, dom,head);
-			
-            console.log('dom after play shows: ' + dom.left() + ' ' + dom.right() + ' rand: ' + dom.id);
             cc += 1;
         }
 
         for(var ca = 0; ca < gameServer.playstack.length; ca++)
         {
             card = gameServer.playstack[ca];
-            domcard = client.createCard(card.left(), card.right());
+            domcard = client.createCard(card);
             $("#players").append( domcard );
         }
 
-	} );
-	
+    } );
+    
 </script>
 </head>
 
 <body>
-	<div id="stage">
-		<div id="players">
-		</div>
-	</div>
+    <div id="stage">
+        <div id="players">
+        </div>
+    </div>
 </body>
 </html>

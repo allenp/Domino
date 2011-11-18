@@ -22,13 +22,17 @@ DominoClient.cardNames = {
 		6: 'six',
 }
 	
-DominoClient.prototype.createCard = function(one, two) {
-    console.log('inside create card: ' + one + ' ' + two);
-	var node = document.createElement("div");
-	var cardString = 'domino ' + DominoClient.cardNames[one] + ' ' + DominoClient.cardNames[two];
-	node.appendChild( document.createTextNode( cardString ) );
-	node.setAttribute('class', cardString );
-	return node;
+DominoClient.prototype.createCard = function(card) {
+    var node = document.createElement("div");
+    var cardString = 'domino ' + DominoClient.cardNames[card.left()] + ' ' + DominoClient.cardNames[card.right()];
+    if(card.left() != card.right())
+        if(card.orientation() > 0)
+            cardString += ' ' + 'r270';
+         else if(card.orientation() < 0)
+            cardString += ' ' + 'r90';
+    node.appendChild( document.createTextNode( cardString ) );
+    node.setAttribute('class', cardString );
+    return node;
 }
 
 window.DominoClient = DominoClient;

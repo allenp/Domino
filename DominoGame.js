@@ -82,11 +82,9 @@
               if( c == card.left() ){
                   card.flip();
                   this.playstack.unshift(card);
-                  console.log('player plays: ' + card.left() + card.right() + ' at left of deck [flipped]');
               }
               else if( c == card.right() ){
                   this.playstack.unshift(card);
-                  console.log('player plays: ' + card.left() + card.right() + ' at left of deck');
               }
               else { return false; }
             }
@@ -94,12 +92,10 @@
               c = this.playstack[this.playstack.length - 1].right();
               if( c == card.left() ){
                 this.playstack.push(card);
-                console.log('player plays: ' + card.left() + card.right() + ' at right of deck');
               }
               else if( c == card.right() ){
                 card.flip();
-				this.playstack.push(card);
-                console.log('player plays: ' + card.left() + card.right() + ' at right of deck [flipped]');
+                this.playstack.push(card);
               }
               else { return false; }
             }
@@ -149,31 +145,27 @@
         this.orientation = function(){ return 1; }    
         this.id = Math.random() * (50 - 10) + 10;
         this.flip = function() { 
-            /*l = this.left();
-            r = this.right();*/
             or = this.orientation();
-            /*this.left = function() { return r; }
-            this.right = function() { return l; }*/
             this.orientation = function() { return or * -1; }
         }
 
         this.equals = function( left, right ) {
             if(right == null) {
                 if(left.orientation() != this.orientation()) {
-					if(this.left() == left.right() && this.right() == left.left())
-						return true;
-				}
+                    if(this.left() == left.right() && this.right() == left.left())
+                        return true;
+                }
                 else {
-					if(this.left() == left.left() && this.right() == left.right())
-						return true;
-				}
+                    if(this.left() == left.left() && this.right() == left.right())
+                        return true;
+                }
             }
-			else
-				if(this.left() == left && this.right() == right)
-					return true;
+            else
+                if(this.left() == left && this.right() == right)
+                    return true;
             return false;
         }
-		
+        
     }
 
     DominoGame.Domino.prototype.canMatch = function(left, right) {
@@ -240,6 +232,6 @@
     }
 
     //expose game
-    window.DominoGame = DominoGame;
+    window.Game = DominoGame;
 
 })(window);
