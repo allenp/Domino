@@ -7,12 +7,12 @@
 (function(window, undefined){
 
     var DominoGame = function() {
-        this.gameid = null;
+        this.gameid = this.newId();
         this.deck = [];
         this.players = [];
         this.currentPlayer = null;
         this.playstack = [];  
-        
+
         //initialize the deck
         var d = 0;
         for(l = 0; l <= 6; ){ //i love you
@@ -22,6 +22,12 @@
             l++;
         }
     };
+
+    DominoGame.prototype.newId = function() {
+        var i = Math.random() * (100 - 10) + 10;
+        i = ''.replace.apply(i, ['.', '']);
+        return i;
+    }
 
     DominoGame.prototype.shuffle = function(){
         var temp = null;
@@ -59,7 +65,7 @@
 
     DominoGame.prototype.chooseNextPlayer = function(){
         var length = this.players.length;
-        if(this.playstack.length == 0) return this.currentPlayer;
+        if(this.playstack.length == 0) return this.whichPlayer();
         var startingPos = this.currentPlayer;
         for( var i = ( this.currentPlayer + 1 ) % length; i != startingPos ; i = (i + 1) % length)
         {
@@ -68,14 +74,19 @@
               this.currentPlayer = i;
               break;
             }
+            else
+            {
+                console.log("I cant play (player: " + this.players[i].id + ")");
+            }
         }
         return this.currentPlayer;
     }
      
     DominoGame.prototype.makePlay = function( player, card, head ){ 
         if(player !== this.currentPlayer){ return false; }
-        if(this.playstack.length === 0)
+        if(this.playstack.length === 0){
             this.playstack.push(card);
+		}
         else { 
             if( head > 0 ){
               c = this.playstack[0].left();
@@ -101,7 +112,9 @@
             }
         }
         this.players[player].makePlay(card);
-        this.chooseNextPlayer();
+		
+		if(this.whoWon() == -1)
+			this.chooseNextPlayer();
         return true;
     }
 
@@ -117,6 +130,7 @@
 
     DominoGame.prototype.gameCanPlay = function(){
         var canPlay = false;
+		if(this.playstack.length === 0){ return true; }
         var startingPos = this.currentPlayer;
         var length = this.players.length;
         for( var i = 0; i < length; i++)
@@ -129,6 +143,48 @@
         }
         return canPlay;
     }
+	
+	DominoGame.prototype.whoWon = function(){
+		var startingPos = this.currentPlayer;
+		var length = this.players.length;
+        var startingPos = this.currentPlayer;
+        for( var i = startingPos; (i + 1) % length != startingPos ; i = (i + 1) % length)
+        {
+            if(this.players[i].cards.length == 0)
+            {
+              return i;
+            }
+        }
+        
+        if(this.gameCanPlay() == false)
+        {
+        
+            console.log("game blocked");
+            _lowest = 0;
+            _hands = [];
+            _hands.push(this.players[0].countHand());
+            _occurrences = 1;
+            
+            for(var i = 1, length = this.players.length; i < length; i++)
+            {
+                _hands.push(this.players[i].countHand());
+                if(_hands[_lowest] > _hands[i]) {
+                    _lowest = i;
+                    _occurrences = 1;
+                }
+                
+                if(_hands[_lowest] == _hands[i]) {
+                    _occurrences += 1;
+                }
+                    
+            }
+            
+            if(_occurrences == 1)
+                return _lowest;
+        }
+		
+		return -1;
+	}
 
     /*!
      * Domino 
@@ -143,7 +199,8 @@
         this.left = function(){ return this.orientation() > 0?  le:  ri; }
         this.right = function(){ return this.orientation() > 0?  ri:  le; }
         this.orientation = function(){ return 1; }    
-        this.id = Math.random() * (50 - 10) + 10;
+        this.id = this.newId();
+		
         this.flip = function() { 
             or = this.orientation();
             this.orientation = function() { return or * -1; }
@@ -177,6 +234,13 @@
         return 0;
     }
 
+    DominoGame.Domino.prototype.newId = function() {
+        var i = Math.random() * (100 - 10) + 10;
+        i = ''.replace.apply(i, ['.', '']);
+        return i;
+    }
+
+
     /*!
 
     Player Object
@@ -195,6 +259,7 @@
                return true;
             }
         }
+        
         //if we get here we didnt find a match
         return false;
     }
@@ -202,6 +267,7 @@
     Player.prototype.whatToPlay = function(left, right) {
         var count = this.cards.length;
         var canplay = [];
+		
         for(i = 0; i < count; i++) {
             if(this.cards[i].canMatch(left,right) > 0) {
                 canplay.push(this.cards[i]);
@@ -215,6 +281,7 @@
         for(var i = 0; i < length; i++) {
             if(this.cards[i].equals(left,right)) {
                 this.cards.splice(i,1);
+                console.log("Player " + this.id + " plays: " + left.left() + " " + left.right());
                 break;
             }
         }
@@ -230,6 +297,16 @@
         //if we get here we didnt find a match
         return false;
     }
+	
+	Player.prototype.countHand = function() {
+		var length = this.cards.length;
+		if(length == 0) return 0;
+		var count = 0;
+		for(i = 0; i < length; i++){
+			count += card.left() + card.right();
+		}
+		return count;
+	}
 
     //expose game
     window.Game = DominoGame;

@@ -21,50 +21,52 @@
         gameServer.shuffle();
         gameServer.deal();
         
-        
-        //this loop now simulates sending out player objects to each participating player
-        //each players player object will contain all the information they need to participate
-        //in the game
-/*      for( var p = 0; p < gameServer.players.length; p++ ) {
-
-            //create the player client object, and initialize it with the player cards
-            //this should change to just accept the entire player object
-            //this will likely come as json from the server
-            //setup DominoClient to make ajax requests for its player information
-            var client = new DominoClient(gameServer.players[p].cards);
-            
-            var cards = client.cards;
-            
-            for(var i = 0; i < cards.length; i++) {
-            
-                var card = client.createCard( cards[i].left(), cards[i].right());
-
-                $("#players").append( card );
-                
-            }
-        }
-        */
-
         var client = new DominoClient();
         var a = gameServer.whichPlayer();
         gameServer.makePlay(a, new Game.Domino(6,6));
-
+		
+		
         var cc = 0;
-
-        while(cc < 16)
+		var who = -1;
+		var canPlay = false;
+		who = gameServer.whoWon();
+		canPlay = gameServer.gameCanPlay();		
+		
+        while(who == -1 && canPlay == true)
         {
             a = gameServer.whichPlayer();
-            ends = gameServer.headsAndTails();
+            ends = gameServer.headsAndTails();			
             plays = gameServer.players[a].whatToPlay(ends.head, ends.tail);
-            first = plays[0];
+			
+			whichOfPlays = Math.floor(Math.random() * plays.length);
+			
+            first = plays[whichOfPlays];
+			
             var head = 0;
-            if(first.right() == ends.head) head = 1;
-            if(first.left() == ends.head) head = 1;
+            
+            if(first.left() == ends.tails) head = 0;
+            else
+                if(first.right() == ends.tails) head = 0;
+            else
+                if(first.right() == ends.head) head = 1;
+            else
+                if(first.left() == ends.head) head = 1;
+            
             left = first.left();
             right = first.right();
             dom = new Game.Domino(left, right);
             gameServer.makePlay(a, dom,head);
-            cc += 1;
+			
+			card = head == 1? gameServer.playstack[0] : gameServer.playstack[gameServer.playstack.length - 1];
+			domcard = client.createCard(card);
+			
+			/*if(head > 0)
+			$("#players").prepend( domcard, $("#players").firstChild);
+			else
+            $("#players").append( domcard );*/
+			
+			who = gameServer.whoWon();
+			canPlay = gameServer.gameCanPlay();
         }
 
         for(var ca = 0; ca < gameServer.playstack.length; ca++)
@@ -73,8 +75,14 @@
             domcard = client.createCard(card);
             $("#players").append( domcard );
         }
+		
+        if(who >= 0)
+            console.log("player " + (who + 1) + " won");
+         else
+            console.log("game was drawn.");
 
     } );
+	
     
 </script>
 </head>

@@ -1,49 +1,49 @@
-.domino 		{ 
+.domino         { 
                   background: transparent url(s1.png) no-repeat scroll 0 0; 
                   width:41px; height:81px; 
                   display: inline-block; text-indent: -9999px; padding: 0; overflow: hidden;
                 }
                 
-.six 			{ background-position: -307px -534px; }
+.six            { background-position: -307px -534px; }
 
-.five 			{ background-position: -256px -445px; }
-.five.six		{ background-position: -307px -445px; }
+.five           { background-position: -256px -445px; }
+.five.six       { background-position: -307px -445px; }
 
-.four 			{ background-position: -205px -356px; }
-.four.five		{ background-position: -256px -356px; }
-.four.six		{ background-position: -307px -356px; }
+.four           { background-position: -205px -356px; }
+.four.five      { background-position: -256px -356px; }
+.four.six       { background-position: -307px -356px; }
 
-.three 			{ background-position: -154px -267px; }
-.three.four		{ background-position: -205px -267px; }
-.three.five		{ background-position: -256px -267px; }
-.three.six		{ background-position: -307px -267px; }
+.three          { background-position: -154px -267px; }
+.three.four     { background-position: -205px -267px; }
+.three.five     { background-position: -256px -267px; }
+.three.six      { background-position: -307px -267px; }
 
-.two 			{ background-position: -103px -178px; }
-.two.three 		{ background-position: -154px -178px; }
-.two.four 		{ background-position: -205px -178px; }
-.two.five 		{ background-position: -256px -178px; }
-.two.six 		{ background-position: -307px -178px; }
+.two            { background-position: -103px -178px; }
+.two.three      { background-position: -154px -178px; }
+.two.four       { background-position: -205px -178px; }
+.two.five       { background-position: -256px -178px; }
+.two.six        { background-position: -307px -178px; }
 
-.one 			{ background-position: -52px -89px; }
-.one.two 		{ background-position: -103px -89px; }
-.one.three		{ background-position: -154px -89px; }
-.one.four		{ background-position: -205px -89px; }
-.one.five		{ background-position: -256px -89px; }
-.one.six		{ background-position: -307px -89px; }
+.one            { background-position: -52px -89px; }
+.one.two        { background-position: -103px -89px; }
+.one.three      { background-position: -154px -89px; }
+.one.four       { background-position: -205px -89px; }
+.one.five       { background-position: -256px -89px; }
+.one.six        { background-position: -307px -89px; }
     
-.blank 			{ background-position: 0 0; }
-.blank.one		{ background-position: -52px 0; }
-.blank.two 		{ background-position: -103px 0; }
-.blank.three 	{ background-position: -154px 0; }
-.blank.four 	{ background-position: -205px 0; }
-.blank.five 	{ background-position: -256px 0; }
-.blank.six 		{ background-position: -307px 0; }
+.blank          { background-position: 0 0; }
+.blank.one      { background-position: -52px 0; }
+.blank.two      { background-position: -103px 0; }
+.blank.three    { background-position: -154px 0; }
+.blank.four     { background-position: -205px 0; }
+.blank.five     { background-position: -256px 0; }
+.blank.six      { background-position: -307px 0; }
     
-.down			{ background-position: 0 -534px !important; }
+.down           { background-position: 0 -534px !important; }
 
 /* rotations */
 
-.r45 			{ -webkit-transform: rotate(45deg); -moz-transform: rotate(45deg); transform: rotate (45deg); }
-.r90 			{ -webkit-transform: rotate(90deg); -moz-transform: rotate(90deg); transform: rotate (90deg); margin:10px 20px; }
-.r180 			{ -webkit-transform: rotate(180deg); -moz-transform: rotate(180deg); transform: rotate (180deg); }
-.r270			{ -webkit-transform: rotate(270deg); -moz-transform: rotate(270deg); transform: rotate (270deg); margin: 10px 20px; }
+.r45            { -webkit-transform: rotate(45deg); -moz-transform: rotate(45deg); transform: rotate (45deg); }
+.r90            { -webkit-transform: rotate(90deg); -moz-transform: rotate(90deg); transform: rotate (90deg); margin:10px 20px; }
+.r180           { -webkit-transform: rotate(180deg); -moz-transform: rotate(180deg); transform: rotate (180deg); }
+.r270           { -webkit-transform: rotate(270deg); -moz-transform: rotate(270deg); transform: rotate (270deg); margin: 10px 20px; }
