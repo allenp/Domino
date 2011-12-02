@@ -1,7 +1,29 @@
-/**
- * @author Paul Allen http://paulallen.com.jm
+ /**
+ * Domino Game
+ * Author Paul Allen http://paulallen.com.jm
+ * Copyright 2011, Paul Allen
+ * Licensed under the MIT or GPL Version 2 licenses.
+ * Date: November 15 2011
  *
- **/
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software to deal in the Software without
+ * restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 
 
 (function(window, undefined){
@@ -63,7 +85,8 @@
         return this.currentPlayer;
     }
 
-    DominoGame.prototype.chooseNextPlayer = function(){
+    //internal function: called with .call or .apply
+    function chooseNextPlayer(){
         var length = this.players.length;
         if(this.playstack.length == 0) return this.whichPlayer();
         var startingPos = this.currentPlayer;
@@ -86,7 +109,7 @@
         if(player !== this.currentPlayer){ return false; }
         if(this.playstack.length === 0){
             this.playstack.push(card);
-		}
+        }
         else { 
             if( head > 0 ){
               c = this.playstack[0].left();
@@ -112,9 +135,9 @@
             }
         }
         this.players[player].makePlay(card);
-		
-		if(this.whoWon() == -1)
-			this.chooseNextPlayer();
+        
+        if(this.whoWon() == -1)
+            chooseNextPlayer.call(this);
         return true;
     }
 
@@ -130,7 +153,7 @@
 
     DominoGame.prototype.gameCanPlay = function(){
         var canPlay = false;
-		if(this.playstack.length === 0){ return true; }
+        if(this.playstack.length === 0){ return true; }
         var startingPos = this.currentPlayer;
         var length = this.players.length;
         for( var i = 0; i < length; i++)
@@ -143,10 +166,10 @@
         }
         return canPlay;
     }
-	
-	DominoGame.prototype.whoWon = function(){
-		var startingPos = this.currentPlayer;
-		var length = this.players.length;
+    
+    DominoGame.prototype.whoWon = function(){
+        var startingPos = this.currentPlayer;
+        var length = this.players.length;
         var startingPos = this.currentPlayer;
         for( var i = startingPos; (i + 1) % length != startingPos ; i = (i + 1) % length)
         {
@@ -182,27 +205,34 @@
             if(_occurrences == 1)
                 return _lowest;
         }
-		
-		return -1;
-	}
+        
+        return -1;
+    }
 
     /*!
      * Domino 
      */
     DominoGame.Domino = function( le, ri ) {
 
-        //immutable properties of the domino
         if(le < 0 || le > 6 || ri < 0 || ri > 6) {
             throw new Error("Invalid arguments supplied for domino: (0 - 6)");
         }
         
-        this.left = function(){ return this.orientation() > 0?  le:  ri; }
-        this.right = function(){ return this.orientation() > 0?  ri:  le; }
+        this.left = function(){ return le; }
+        this.right = function(){ return ri; }
         this.orientation = function(){ return 1; }    
         this.id = this.newId();
-		
+        
         this.flip = function() { 
             or = this.orientation();
+            if(or > 0){ //or > 0 is normal orientation so flip now
+                this.left = function(){ return ri; }
+                this.right = function(){ return le; }
+            }else{
+                this.left = function(){ return le; }
+                this.right = function(){ return ri; }
+            }
+            
             this.orientation = function() { return or * -1; }
         }
 
@@ -254,7 +284,7 @@
 
     Player.prototype.canPlay = function(/* int */ left, /* int */ right ) {
         var count = this.cards.length;
-        for(i = 0; i < count; i++){
+        for(i = 0; i < count; i++) {
             if(this.cards[i].canMatch(left,right)) {
                return true;
             }
@@ -267,7 +297,7 @@
     Player.prototype.whatToPlay = function(left, right) {
         var count = this.cards.length;
         var canplay = [];
-		
+        
         for(i = 0; i < count; i++) {
             if(this.cards[i].canMatch(left,right) > 0) {
                 canplay.push(this.cards[i]);
@@ -297,16 +327,16 @@
         //if we get here we didnt find a match
         return false;
     }
-	
-	Player.prototype.countHand = function() {
-		var length = this.cards.length;
-		if(length == 0) return 0;
-		var count = 0;
-		for(i = 0; i < length; i++){
-			count += card.left() + card.right();
-		}
-		return count;
-	}
+    
+    Player.prototype.countHand = function() {
+        var length = this.cards.length;
+        if(length == 0) return 0;
+        var count = 0;
+        for(i = 0; i < length; i++){
+            count += card.left() + card.right();
+        }
+        return count;
+    }
 
     //expose game
     window.Game = DominoGame;
